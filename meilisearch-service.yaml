@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: meilisearch
+  labels:
+    io.kompose.service: meilisearch
+spec:
+  type: ClusterIP
+  ports:
+    - port: 7700
+      targetPort: 7700
+      protocol: TCP
+  selector:
+    io.kompose.service: meilisearch
