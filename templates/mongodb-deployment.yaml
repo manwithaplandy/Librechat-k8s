@@ -31,7 +31,7 @@ spec:
           name: chat-mongodb
           envFrom:
             - configMapRef:
-                name: env-configmap
+                name: env
           volumeMounts:
             - mountPath: /data/db
               name: mongodb-claim0

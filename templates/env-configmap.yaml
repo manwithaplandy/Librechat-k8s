@@ -6,7 +6,7 @@ data:
   ALLOW_SOCIAL_REGISTRATION: "false"
   ANTHROPIC_API_KEY: user_provided
   APP_TITLE: LibreChat
-  API_HOST: 0.0.0.0
+  API_HOST: "0.0.0.0"
   ASSISTANTS_API_KEY: user_provided
   AZURE_AI_SEARCH_API_KEY: ""
   AZURE_AI_SEARCH_API_VERSION: ""
@@ -29,6 +29,7 @@ data:
   DEBUG_LOGGING: "true"
   DEBUG_OPENAI: "false"
   DEBUG_PLUGINS: "true"
+  DEBUG_RAG_API: "true"
   DISCORD_CALLBACK_URL: /oauth/discord/callback
   DISCORD_CLIENT_ID: ""
   DISCORD_CLIENT_SECRET: ""
