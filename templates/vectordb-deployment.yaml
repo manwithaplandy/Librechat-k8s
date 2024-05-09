@@ -8,7 +8,7 @@ metadata:
     io.kompose.service: db
   name: vectordb
 spec:
-  replicas: 1
+  replicas: {{ .Values.containers.vectordb.replicas }}
   selector:
     matchLabels:
       io.kompose.service: db
@@ -24,26 +24,33 @@ spec:
         io.kompose.service: db
     spec:
       containers:
-        - env:
+        - name: {{ .Values.containers.vectordb.name }}
+          image: "{{ .Values.containers.vectordb.registry }}/{{ .Values.containers.vectordb.image }}:{{ .Values.containers.vectordb.version }}"
+          envFrom:
+            - configMapRef:
+                name: my-configmap
+          env:
             - name: POSTGRES_DB
               value: mydatabase
             - name: POSTGRES_PASSWORD
               value: mypassword
             - name: POSTGRES_USER
               value: myuser
-          image: ankane/pgvector:latest
-          name: vectordb
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: pgdata2
           resources:
             limits:
-              cpu: "0.5"
-              memory: "500Mi"
+              cpu: {{ .Values.containers.vectordb.resources.limits.cpu }}
+              memory: {{ .Values.containers.vectordb.resources.limits.memory }}
             requests:
-              cpu: "0.3"
-              memory: "300Mi"
+              cpu: {{ .Values.containers.vectordb.resources.requests.cpu }}
+              memory: {{ .Values.containers.vectordb.resources.requests.memory }}
       restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+      {{- end }}
       volumes:
         - name: pgdata2
           persistentVolumeClaim:

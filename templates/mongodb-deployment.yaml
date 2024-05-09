@@ -9,7 +9,7 @@ metadata:
   name: mongodb
 spec:
   serviceName: "mongodb"
-  replicas: 1
+  replicas: {{ .Values.containers.mongo.replicas }}
   selector:
     matchLabels:
       io.kompose.service: mongodb
@@ -27,8 +27,8 @@ spec:
         - args:
             - mongod
             - --noauth
-          image: mongo
-          name: chat-mongodb
+          name: {{ .Values.containers.mongo.name }}
+          image: "{{ .Values.containers.mongo.registry }}/{{ .Values.containers.mongo.image }}:{{ .Values.containers.mongo.version }}"
           envFrom:
             - configMapRef:
                 name: env
@@ -37,17 +37,21 @@ spec:
               name: mongodb-claim0
           resources:
             limits:
-              cpu: "1"
-              memory: "1Gi"
+              cpu: {{ .Values.containers.mongo.resources.limits.cpu }}
+              memory: {{ .Values.containers.mongo.resources.limits.memory }}
             requests:
-              cpu: "100m"
-              memory: "100Mi"
+              cpu: {{ .Values.containers.mongo.resources.requests.cpu }}
+              memory: {{ .Values.containers.mongo.resources.requests.memory }}
       restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+      {{- end }}
   volumeClaimTemplates:
-  - metadata:
-      name: mongodb-claim0
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+    - metadata:
+        name: mongodb-claim0
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
